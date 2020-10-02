@@ -6,7 +6,8 @@ import { disconnect } from './database/database'
 import { connect } from './database/database'
 import { objetoSchema } from './model/vehiculo'
 // es la colección de la DB, el model
-import vehiculos from './model/vehiculo'  
+import vehiculos from './model/vehiculo' 
+let matricula: string 
 let marca: string
 let modelo: string
 let oVeh: Vehiculo
@@ -18,12 +19,14 @@ const main = async () => {
         switch(n) {
             case 1:
                 console.log('Opción Nuevo Vehículo')
+                matricula = await leerTeclado('Dame la matricula')
                 marca = await leerTeclado('Dame la marca') 
                 modelo = await leerTeclado('Dame el modelo')
-                oVeh = new Vehiculo(marca, modelo)
+                oVeh = new Vehiculo(matricula, marca, modelo)
                 break
             case 2:
                 console.log('Opción mostrar Vehículo')
+                console.log(`La matrícula es: ${oVeh.matricula}`)
                 console.log(`La marca es: ${oVeh.marca}`)
                 console.log(`El modelo es: ${oVeh.modelo}`)
                 break
@@ -35,12 +38,16 @@ const main = async () => {
             case 4:
                 console.log('Opción salvar automovil')
                 // Obtengo el objeto Schema a partir del objeto Vehiculo
-                const oSchema = objetoSchema ( oVeh )
                 // Obtengo el documento de la BD a partir del objeto Schema
-                const documento = new vehiculos ( oSchema )
-                console.log(documento)
+                console.log( objetoSchema ( oVeh ) )
                 // salvo el documento
-                await documento.save()
+                await (new vehiculos ( objetoSchema ( oVeh ) )).save()
+                break   
+            case 5:
+                console.log('Opción recuperar automovil')
+                matricula = await leerTeclado('Dame la matricula')
+                let r = await vehiculos.find({matricula: '1234ABC'})
+                console.log( r )
                 break   
             case 0:
                 console.log('\nAdios')
