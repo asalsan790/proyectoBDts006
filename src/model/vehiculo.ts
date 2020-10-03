@@ -1,5 +1,4 @@
 import {Schema, model} from 'mongoose'
-import { plainToClass } from "class-transformer"; 
 
 export class Vehiculo {
     private _matricula: string
@@ -31,10 +30,20 @@ export class Vehiculo {
 }
 // Definimos el Schema
 const VehiculoShema = new Schema({
+    matricula: String,
     marca: String,
-    modelo: String,
-    matricula: String
+    modelo: String
 })
+
+// La colección de la BD: vehiculos (Plural siempre)
+export let vehiculos = model( 'vehiculos', VehiculoShema )
+
+// Creo el tipo 
+type tVehiculo = {
+    matricula: string,
+    marca: string,
+    modelo: string
+}
 /*
 Para pasar de objeto Vehículo a objeto Schema
 */
@@ -45,8 +54,7 @@ export let objetoSchema = (OVehiculo: Vehiculo) => {
         modelo: OVehiculo.modelo
     }
 }
-// La colección de la BD: vehiculos (Plural siempre)
-export let vehiculos = model( 'vehiculos', VehiculoShema )
+
 // Recibe un objeto y lo salva
 export let salvarVehiculo = async (OVehiculo: Vehiculo) =>{
     await (new vehiculos ( objetoSchema ( OVehiculo) )).save()
@@ -54,11 +62,14 @@ export let salvarVehiculo = async (OVehiculo: Vehiculo) =>{
 /*
     Recibe la matrícula y devuelve el objeto Vehículo
     Hay que poner tipo any para que typescript deje utilizar 
-    la notación para los campos vehiculo.matricula
-    type script no reconoce el tipo que deveulve findOne.
+    la notación para los campos vehiculo.matricula.
 */
 export let getVehiculoMatricula = async (matricula: string): Promise<Vehiculo> => {
-    let dVehiculo: any = await vehiculos.findOne({matricula: matricula})
-    let oVehiculo = new Vehiculo(dVehiculo.matricula, dVehiculo.marca, dVehiculo.modelo)
+    // Obtenemos el documento de la base de datos hay que declararlo any
+    let dBDVehiculo: any = await vehiculos.findOne({matricula: matricula})
+    // Lo pasamos a un documento json de tVehiculo para usar los campos
+    let jsonVehiculo: tVehiculo = dBDVehiculo
+    // A partir del json obtenemos la información
+    let oVehiculo = new Vehiculo(jsonVehiculo.matricula, jsonVehiculo.marca, jsonVehiculo.modelo)
     return oVehiculo
 }
