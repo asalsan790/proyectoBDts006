@@ -69,7 +69,7 @@ export let getVehiculoMatricula = async (matricula: string): Promise<Vehiculo> =
     let dBDVehiculo: any = await vehiculos.findOne({matricula: matricula})
     // Lo pasamos a un documento json de tVehiculo para usar los campos
     let jsonVehiculo: tVehiculo = dBDVehiculo
-    // A partir del json obtenemos la información
+    // A partir del json obtenemos la información.
     let oVehiculo = new Vehiculo(jsonVehiculo.matricula, jsonVehiculo.marca, jsonVehiculo.modelo)
     return oVehiculo
 }
