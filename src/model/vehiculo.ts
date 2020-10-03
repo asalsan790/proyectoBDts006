@@ -55,7 +55,7 @@ export let salvarVehiculo = async (OVehiculo: Vehiculo) =>{
     Recibe la matrícula y devuelve el objeto Vehículo
     Hay que poner tipo any para que typescript deje utilizar 
     la notación para los campos vehiculo.matricula
-    type script no reconoce el tipo que deveulve findOne
+    type script no reconoce el tipo que deveulve findOne.
 */
 export let getVehiculoMatricula = async (matricula: string): Promise<Vehiculo> => {
     let dVehiculo: any = await vehiculos.findOne({matricula: matricula})
