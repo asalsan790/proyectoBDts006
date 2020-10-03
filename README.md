@@ -10,6 +10,7 @@ git remote add origin https://github.com/asalsan790/proyectoBDts005.git
 git push -u origin main
 
 # Objetivos
+En esta versión ya almacenamos y recuperamos objetos
 Menú
 Entrada de teclado
 Crear Objetos
