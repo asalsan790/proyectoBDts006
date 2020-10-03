@@ -1,4 +1,5 @@
 import {Schema, model} from 'mongoose'
+import { plainToClass } from "class-transformer"; 
 
 export class Vehiculo {
     private _matricula: string
@@ -44,6 +45,20 @@ export let objetoSchema = (OVehiculo: Vehiculo) => {
         modelo: OVehiculo.modelo
     }
 }
-// La colección de la BD: vehículos (Plural siempre)
-export default model( 'vehiculos', VehiculoShema )
-
+// La colección de la BD: vehiculos (Plural siempre)
+export let vehiculos = model( 'vehiculos', VehiculoShema )
+// Recibe un objeto y lo salva
+export let salvarVehiculo = async (OVehiculo: Vehiculo) =>{
+    await (new vehiculos ( objetoSchema ( OVehiculo) )).save()
+}
+/*
+    Recibe la matrícula y devuelve el objeto Vehículo
+    Hay que poner tipo any para que typescript deje utilizar 
+    la notación para los campos vehiculo.matricula
+    type script no reconoce el tipo que deveulve findOne
+*/
+export let getVehiculoMatricula = async (matricula: string): Promise<Vehiculo> => {
+    let dVehiculo: any = await vehiculos.findOne({matricula: matricula})
+    let oVehiculo = new Vehiculo(dVehiculo.matricula, dVehiculo.marca, dVehiculo.modelo)
+    return oVehiculo
+}

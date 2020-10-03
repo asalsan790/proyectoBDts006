@@ -1,16 +1,11 @@
 import {menuPral} from './view/menuPral'
 import { leerTeclado } from './view/entradaTeclado'
-// La clase Vehiculo del modelo de clases
-import { Vehiculo } from './model/vehiculo'
-import { disconnect } from './database/database'
-import { connect } from './database/database'
-import { objetoSchema } from './model/vehiculo'
-// es la colección de la DB, el model
-import vehiculos from './model/vehiculo' 
+import { connect, disconnect } from './database/database'
+import { Vehiculo, salvarVehiculo, vehiculos, getVehiculoMatricula } from './model/vehiculo' 
 let matricula: string 
 let marca: string
 let modelo: string
-let oVeh: Vehiculo
+let oVehiculo: Vehiculo
 const main = async () => {
     let n: number
     await connect()
@@ -22,32 +17,28 @@ const main = async () => {
                 matricula = await leerTeclado('Dame la matricula')
                 marca = await leerTeclado('Dame la marca') 
                 modelo = await leerTeclado('Dame el modelo')
-                oVeh = new Vehiculo(matricula, marca, modelo)
+                oVehiculo = new Vehiculo(matricula, marca, modelo)
                 break
             case 2:
                 console.log('Opción mostrar Vehículo')
-                console.log(`La matrícula es: ${oVeh.matricula}`)
-                console.log(`La marca es: ${oVeh.marca}`)
-                console.log(`El modelo es: ${oVeh.modelo}`)
+                console.log(`La matrícula es: ${oVehiculo.matricula}`)
+                console.log(`La marca es: ${oVehiculo.marca}`)
+                console.log(`El modelo es: ${oVehiculo.modelo}`)
                 break
             case 3:
                 console.log('Opción cambiar modelo')
                 modelo = await leerTeclado('Dame el modelo')
-                oVeh.modelo = modelo
+                oVehiculo.modelo = modelo
                 break                
             case 4:
                 console.log('Opción salvar automovil')
-                // Obtengo el objeto Schema a partir del objeto Vehiculo
-                // Obtengo el documento de la BD a partir del objeto Schema
-                console.log( objetoSchema ( oVeh ) )
-                // salvo el documento
-                await (new vehiculos ( objetoSchema ( oVeh ) )).save()
+                await salvarVehiculo (oVehiculo )
                 break   
             case 5:
                 console.log('Opción recuperar automovil')
                 matricula = await leerTeclado('Dame la matricula')
-                let r = await vehiculos.find({matricula: '1234ABC'})
-                console.log( r )
+                oVehiculo = await getVehiculoMatricula (matricula)
+                console.log( oVehiculo )
                 break   
             case 0:
                 console.log('\nAdios')

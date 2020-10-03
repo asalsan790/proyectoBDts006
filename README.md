@@ -50,7 +50,7 @@ Tendrá la estructura de menú y la entrada de teclado
 
 ## Creamos el index.js 
 Abrimos una shell para ejecución y otra para ejecución con
-*node dist/src/index*
+*node dist/index*
 
 ## Instalar una aplicación bajada sin node_modules
 *npm i*
