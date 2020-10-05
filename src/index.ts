@@ -1,7 +1,8 @@
 import {menuPral} from './view/menuPral'
 import { leerTeclado } from './view/entradaTeclado'
 import { connect, disconnect } from './database/database'
-import { Vehiculo, salvarVehiculo, vehiculos, getVehiculoMatricula } from './model/vehiculo' 
+import { Vehiculo, salvarVehiculo, getVehiculos, getVehiculoMatricula } 
+        from './model/vehiculo' 
 let matricula: string 
 let marca: string
 let modelo: string
@@ -37,9 +38,23 @@ const main = async () => {
             case 5:
                 console.log('Opción recuperar automovil')
                 matricula = await leerTeclado('Dame la matricula')
-                oVehiculo = await getVehiculoMatricula (matricula)
-                console.log( oVehiculo )
+                try{
+                    oVehiculo = await getVehiculoMatricula (matricula)
+                    console.log( oVehiculo )
+                }catch(er){
+                    console.log(er)
+                }
                 break   
+            case 6:
+                console.log('Opción listado')
+                
+                try{
+                    const aVehiculos: Vehiculo[] = await getVehiculos ()
+                    console.log( aVehiculos)
+                }catch(er){
+                    console.log(er)
+                }
+                break
             case 0:
                 console.log('\nAdios')
                 break

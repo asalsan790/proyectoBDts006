@@ -1,4 +1,4 @@
-import {Schema, model} from 'mongoose'
+import {Schema, model, DocumentQuery, Document} from 'mongoose'
 
 export class Vehiculo {
     private _matricula: string
@@ -38,12 +38,13 @@ const VehiculoShema = new Schema({
 // La colección de la BD: vehiculos (Plural siempre)
 export let vehiculos = model( 'vehiculos', VehiculoShema )
 
-// Creo el tipo 
+// Creo el tipo para después en el query poder usar los campos 
 type tVehiculo = {
     matricula: string,
     marca: string,
     modelo: string
 }
+
 /*
 Para pasar de objeto Vehículo a objeto Schema
 */
@@ -64,12 +65,27 @@ export let salvarVehiculo = async (OVehiculo: Vehiculo) =>{
     Hay que poner tipo any para que typescript deje utilizar 
     la notación para los campos vehiculo.matricula.
 */
+
 export let getVehiculoMatricula = async (matricula: string): Promise<Vehiculo> => {
-    // Obtenemos el documento de la base de datos hay que declararlo any
-    let dBDVehiculo: any = await vehiculos.findOne({matricula: matricula})
-    // Lo pasamos a un documento json de tVehiculo para usar los campos
-    let jsonVehiculo: tVehiculo = dBDVehiculo
-    // A partir del json obtenemos la información.
-    let oVehiculo = new Vehiculo(jsonVehiculo.matricula, jsonVehiculo.marca, jsonVehiculo.modelo)
-    return oVehiculo
+        const query: any = await vehiculos.findOne({matricula: matricula})
+        if (query == null) {
+            throw "No encontrado"
+        }
+        const vehiculo: tVehiculo = query  // Para poder usar los campos
+        return new Vehiculo(vehiculo.matricula, vehiculo.marca, vehiculo.modelo)
 }
+
+export let getVehiculos = async (): Promise<Vehiculo[]> => {
+    const query: any = await vehiculos.find({matricula: "w"})
+    let aV: Vehiculo[] = []
+    let vehiculo: tVehiculo
+    for( let elemento of query){
+        vehiculo = elemento
+        aV.push(new Vehiculo(vehiculo.matricula, vehiculo.marca, vehiculo.modelo))
+    }
+    if (aV.length == 0){
+        throw "Sin resultados"
+    }
+    return aV
+}
+

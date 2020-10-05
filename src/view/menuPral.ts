@@ -8,6 +8,7 @@ export const menuPral = async () => {
     console.log('3.- Cambiar el modelo')
     console.log('4.- Salvar Automovil')
     console.log('5.- Recuperar Automóvil por matrícula')
+    console.log('6.- Listado')
     console.log('0.- Salir')
     n = parseInt( await leerTeclado('opción') )
     return n
