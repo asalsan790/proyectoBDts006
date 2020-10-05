@@ -76,7 +76,7 @@ export let getVehiculoMatricula = async (matricula: string): Promise<Vehiculo> =
 }
 
 export let getVehiculos = async (): Promise<Vehiculo[]> => {
-    const query: any = await vehiculos.find({matricula: "w"})
+    const query: any = await vehiculos.find()
     let aV: Vehiculo[] = []
     let vehiculo: tVehiculo
     for( let elemento of query){
